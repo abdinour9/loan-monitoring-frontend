@@ -1,0 +1,164 @@
+
+@import "tailwindcss";
+/* Sidebar Mobile Responsive Styles */
+@media (max-width: 1024px) {
+  .sidebar-mobile-open {
+    overflow: hidden;
+  }
+}
+
+/* Custom scrollbar for sidebar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #1a2e1a;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #16a34a;
+}
+
+/* Smooth transitions */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Focus styles for accessibility */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+/* Sidebar Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for sidebar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #1a2e1a;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #16a34a;
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* Smooth scrolling for the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}
+/* Slide Up Animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.2s ease-out;
+}
+
+/* User dropdown hover effect */
+.hover\:bg-green-600\/20:hover {
+  background-color: rgba(22, 163, 74, 0.2);
+}
+
+.hover\:bg-red-600\/20:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Custom scrollbar for sidebar (already in your CSS) */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #1a2e1a;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #16a34a;
+}
+
+/* (CSS) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
