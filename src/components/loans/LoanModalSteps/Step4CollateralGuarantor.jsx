@@ -235,29 +235,8 @@ export function Step4CollateralGuarantor({
         <h3 className="font-medium text-gray-900 mb-4">Guarantor Information</h3>
         
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <button
-            type="button"
-            onClick={() => onGuarantorModeChange('none')}
-            className={`p-3 rounded-xl border transition-all ${
-              guarantorMode === 'none'
-                ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-600'
-            }`}
-          >
-            No Guarantor
-          </button>
-          <button
-            type="button"
-            onClick={() => onGuarantorModeChange('existing')}
-            className={`p-3 rounded-xl border transition-all flex items-center justify-center gap-2 ${
-              guarantorMode === 'existing'
-                ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-600'
-            }`}
-          >
-            <UserCheck size={16} />
-            <span>Existing</span>
-          </button>
+
+
           <button
             type="button"
             onClick={() => onGuarantorModeChange('new')}

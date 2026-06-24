@@ -366,8 +366,8 @@ export function LoanModal({ loan, users, onClose, onSave, formatCurrency }) {
         if (!formData.newBorrower.nationalId?.trim()) newErrors['newBorrower.nationalId'] = 'National ID is required';
       }
     } else if (currentStep === 2) {
-      if (!formData.amount || parseFloat(formData.amount) < 100) {
-        newErrors.amount = 'Amount must be at least 100';
+      if (!formData.amount || parseFloat(formData.amount) < 1) {
+        newErrors.amount = 'Amount must be at least 1';
       }
       if (!formData.term || parseInt(formData.term) < 1) {
         newErrors.term = 'Term must be at least 1 month';

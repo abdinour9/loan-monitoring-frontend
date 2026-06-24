@@ -103,7 +103,7 @@ export function Step3RiskEvaluation({
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-medium text-gray-900 flex items-center gap-2">
             <Brain size={18} className="text-emerald-600" />
-            AI Risk Assessment
+            Risk Assessment
           </h3>
           <span className={`text-xs px-3 py-1.5 rounded-full font-medium ${getRiskColor(risk.level)}`}>
             {risk.level?.toUpperCase()} RISK (Score: {risk.score})

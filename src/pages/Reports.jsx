@@ -207,99 +207,174 @@ function Reports() {
 
   const chartData = getChartData();
 
-  // Handle report export
-  const handleExportReport = async (reportTitle, reportType, reportData) => {
-    setExporting(true);
-    try {
-      const wb = XLSX.utils.book_new();
-      let ws;
+// src/pages/Reports.jsx - Fixed handleExportReport function
 
-      switch(reportType) {
-        case 'performance':
-          ws = XLSX.utils.json_to_sheet(
-            (stats?.byStatus || []).map(s => ({
-              'Status': s._id,
-              'Number of Loans': s.count,
-              'Total Amount': s.totalAmount,
-              'Paid Amount': s.paidAmount || 0,
-              'Remaining': (s.totalAmount || 0) - (s.paidAmount || 0)
-            }))
-          );
-          break;
+const handleExportReport = async (reportTitle, reportType, reportData) => {
+  setExporting(true);
+  try {
+    const wb = XLSX.utils.book_new();
+    let ws;
 
-        case 'risk':
-          ws = XLSX.utils.json_to_sheet(
-            Object.entries(metrics?.riskDistribution || {}).map(([level, count]) => ({
-              'Risk Level': level,
-              'Number of Loans': count,
-              'Percentage': `${((count / loans.length) * 100).toFixed(1)}%`
-            }))
-          );
-          break;
-
-        case 'loans':
-          ws = XLSX.utils.json_to_sheet(
-            loans.map(l => ({
-              'Loan ID': l.loanId,
-              'Borrower': l.borrower?.name,
-              'Amount': l.amount,
-              'Status': l.status,
-              'Paid Amount': l.paidAmount || 0,
-              'Remaining': (l.amount || 0) - (l.paidAmount || 0),
-              'Risk Level': l.risk?.level,
-              'Term': `${l.term} months`,
-              'Interest': `${l.interestRate}%`,
-              'Start Date': new Date(l.startDate).toLocaleDateString(),
-              'End Date': new Date(l.endDate).toLocaleDateString()
-            }))
-          );
-          break;
-
-        case 'payments':
-          ws = XLSX.utils.json_to_sheet(
-            payments.map(p => ({
-              'Date': new Date(p.createdAt).toLocaleDateString(),
-              'Borrower': p.userId?.name,
-              'Loan ID': p.loanId_display,
-              'Amount': p.amount,
-              'Method': p.paymentMethod,
-              'Phone': p.phoneNumber,
-              'Status': p.status,
-              'Transaction ID': p.transactionId
-            }))
-          );
-          break;
-
-        case 'users':
-          ws = XLSX.utils.json_to_sheet(
-            users.map(u => ({
-              'Name': u.name,
-              'Email': u.email,
-              'Phone': u.phone,
-              'Role': u.role,
-              'Status': u.isActive ? 'Active' : 'Inactive',
-              'Joined': new Date(u.createdAt).toLocaleDateString()
-            }))
-          );
-          break;
-
-        default:
-          ws = XLSX.utils.json_to_sheet(reportData || []);
+    // Helper function to ensure data is an array
+    const ensureArray = (data) => {
+      if (Array.isArray(data)) return data;
+      if (data === null || data === undefined) return [];
+      // If it's an object, convert to array of key-value pairs or single item
+      if (typeof data === 'object') {
+        // Check if it's a plain object (not an array)
+        if (!Array.isArray(data) && data.constructor === Object) {
+          return [data];
+        }
+        return [];
       }
+      return [];
+    };
 
-      if (ws) {
-        XLSX.utils.book_append_sheet(wb, ws, "Report");
-        const filename = `${reportTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
-        XLSX.writeFile(wb, filename);
-        toast.success('Report downloaded successfully');
-      }
-    } catch (error) {
-      console.error('Export error:', error);
-      toast.error('Failed to export report');
-    } finally {
-      setExporting(false);
+    switch(reportType) {
+      case 'performance':
+        ws = XLSX.utils.json_to_sheet(
+          ensureArray(stats?.byStatus || []).map(s => ({
+            'Status': s._id || 'Unknown',
+            'Number of Loans': s.count || 0,
+            'Total Amount': s.totalAmount || 0,
+            'Paid Amount': s.paidAmount || 0,
+            'Remaining': (s.totalAmount || 0) - (s.paidAmount || 0)
+          }))
+        );
+        break;
+
+      case 'risk':
+        const riskData = ensureArray(Object.entries(metrics?.riskDistribution || {}).map(([level, count]) => ({
+          'Risk Level': level,
+          'Number of Loans': count,
+          'Percentage': `${((count / (loans.length || 1)) * 100).toFixed(1)}%`
+        })));
+        ws = XLSX.utils.json_to_sheet(riskData);
+        break;
+
+      case 'loans':
+        ws = XLSX.utils.json_to_sheet(
+          ensureArray(loans).map(l => ({
+            'Loan ID': l.loanId || 'N/A',
+            'Borrower': l.borrower?.name || 'Unknown',
+            'Amount': l.amount || 0,
+            'Status': l.status || 'Unknown',
+            'Paid Amount': l.paidAmount || 0,
+            'Remaining': (l.amount || 0) - (l.paidAmount || 0),
+            'Risk Level': l.risk?.level || 'N/A',
+            'Term': l.term ? `${l.term} months` : 'N/A',
+            'Interest': l.interestRate ? `${l.interestRate}%` : 'N/A',
+            'Start Date': l.startDate ? new Date(l.startDate).toLocaleDateString() : 'N/A',
+            'End Date': l.endDate ? new Date(l.endDate).toLocaleDateString() : 'N/A'
+          }))
+        );
+        break;
+
+      case 'payments':
+        ws = XLSX.utils.json_to_sheet(
+          ensureArray(payments).map(p => ({
+            'Date': p.createdAt ? new Date(p.createdAt).toLocaleDateString() : 'N/A',
+            'Borrower': p.userId?.name || 'Unknown',
+            'Loan ID': p.loanId_display || p.loanId || 'N/A',
+            'Amount': p.amount || 0,
+            'Method': p.paymentMethod || 'N/A',
+            'Phone': p.phoneNumber || 'N/A',
+            'Status': p.status || 'Unknown',
+            'Transaction ID': p.transactionId || 'N/A'
+          }))
+        );
+        break;
+
+      case 'users':
+        ws = XLSX.utils.json_to_sheet(
+          ensureArray(users).map(u => ({
+            'Name': u.name || 'Unknown',
+            'Email': u.email || 'N/A',
+            'Phone': u.phone || 'N/A',
+            'Role': u.role || 'Unknown',
+            'Status': u.isActive ? 'Active' : 'Inactive',
+            'Joined': u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'
+          }))
+        );
+        break;
+
+      case 'complete':
+        // Combined report
+        const completeData = [];
+        
+        // Add loan data
+        if (Array.isArray(loans)) {
+          loans.forEach(l => {
+            completeData.push({
+              'Type': 'Loan',
+              'Loan ID': l.loanId || 'N/A',
+              'Name': l.borrower?.name || 'Unknown',
+              'Amount': l.amount || 0,
+              'Status': l.status || 'Unknown'
+            });
+          });
+        }
+        
+        // Add user data
+        if (Array.isArray(users)) {
+          users.forEach(u => {
+            completeData.push({
+              'Type': 'User',
+              'Name': u.name || 'Unknown',
+              'Email': u.email || 'N/A',
+              'Phone': u.phone || 'N/A',
+              'Role': u.role || 'Unknown'
+            });
+          });
+        }
+        
+        ws = XLSX.utils.json_to_sheet(completeData);
+        break;
+
+      case 'financial':
+        const financialData = ensureArray([{
+          'Metric': 'Total Portfolio',
+          'Value': metrics?.totalPortfolio || 0
+        }, {
+          'Metric': 'Total Paid',
+          'Value': metrics?.totalPaid || 0
+        }, {
+          'Metric': 'Collection Rate',
+          'Value': `${(metrics?.collectionRate || 0).toFixed(1)}%`
+        }, {
+          'Metric': 'Average Loan Size',
+          'Value': metrics?.avgLoanSize || 0
+        }, {
+          'Metric': 'Default Rate',
+          'Value': `${(metrics?.defaultRate || 0).toFixed(1)}%`
+        }]);
+        ws = XLSX.utils.json_to_sheet(financialData);
+        break;
+
+      default:
+        // For any other case, ensure we have an array
+        const safeData = ensureArray(reportData);
+        ws = XLSX.utils.json_to_sheet(safeData);
+        break;
     }
-  };
+
+    // Safety check: if ws is undefined or not valid, create a fallback
+    if (!ws || !ws['!ref']) {
+      ws = XLSX.utils.json_to_sheet([{ 'Message': 'No data available for this report' }]);
+    }
+
+    XLSX.utils.book_append_sheet(wb, ws, "Report");
+    const filename = `${reportTitle.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, filename);
+    toast.success('Report downloaded successfully');
+    
+  } catch (error) {
+    console.error('Export error:', error);
+    toast.error(`Failed to export report: ${error.message}`);
+  } finally {
+    setExporting(false);
+  }
+};
 
   // Available reports list with real data
   const availableReports = [

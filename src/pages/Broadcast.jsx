@@ -862,16 +862,17 @@ function Broadcast() {
                   Loans ({dueLoans.length})
                 </h3>
                 <div className="flex gap-2">
-                  <select
-                    value={dueFilter}
-                    onChange={(e) => setDueFilter(e.target.value)}
-                    className="px-3 py-1.5 bg-white/20 text-white rounded-lg text-sm border border-white/30"
-                  >
-                    <option value="overdue">Overdue Only</option>
-                    <option value="due_today">Due Today</option>
-                    <option value="due_week">Due Within 7 Days</option>
-                    <option value="due_month">Due Within 30 Days</option>
-                  </select>
+              <select
+                value={dueFilter}
+                onChange={(e) => setDueFilter(e.target.value)}
+                className="px-3 py-1.5 bg-white/20 text-gray-900 rounded-lg text-sm border border-white/30"
+                style={{ color: '#1a1a1a' }}
+              >
+                <option value="overdue" style={{ color: '#1a1a1a', background: 'white' }}>Overdue Only</option>
+                <option value="due_today" style={{ color: '#1a1a1a', background: 'white' }}>Due Today</option>
+                <option value="due_week" style={{ color: '#1a1a1a', background: 'white' }}>Due Within 7 Days</option>
+                <option value="due_month" style={{ color: '#1a1a1a', background: 'white' }}>Due Within 30 Days</option>
+              </select>
                   <button onClick={fetchDueLoans} className="px-3 py-1.5 bg-white/20 text-white rounded-lg text-sm hover:bg-white/30">
                     <RefreshCw size={14} className={loadingDue ? "animate-spin" : ""} />
                   </button>
